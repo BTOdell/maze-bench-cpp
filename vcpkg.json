@@ -3,6 +3,6 @@
     "name": "maze-bench-cpp",
     "version": "0.1.0",
     "dependencies": [
-        "pngpp"
+        "lodepng"
     ]
 }
