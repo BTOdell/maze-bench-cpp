@@ -12,14 +12,16 @@ long long delta_nanos(const std::chrono::steady_clock::time_point& tp) {
 
 int main() {
     std::vector<unsigned char> pixels;
-    unsigned int width;
-    unsigned int height;
-    unsigned int error = lodepng::decode(pixels, width, height, "maze1000.png");
+    unsigned int uwidth;
+    unsigned int uheight;
+    unsigned int error = lodepng::decode(pixels, uwidth, uheight, "maze1000.png");
     if (error) {
         std::cerr << "Image decode error " << error << ": "
                   << lodepng_error_text(error) << std::endl;
         return 1;
     }
+    int width = uwidth;
+    int height = uheight;
     std::cout << "Loaded image: " << width << " x " << height << std::endl;
     if (width <= 2 || height <= 2) {
         std::cerr << "Image size must be at least 3x3" << std::endl;
@@ -29,13 +31,10 @@ int main() {
     std::cout << "Transforming image into maze..." << std::endl;
     auto time = std::chrono::steady_clock::now();
     Array2D<bool> maze(width, height);
-    for (unsigned int y = 0; y < height; y++) {
-        for (unsigned int x = 0; x < width; x++) {
-            unsigned int p = (y * width + x) * 4;
-            unsigned char r = pixels[p];
-            unsigned char g = pixels[p + 1];
-            unsigned char b = pixels[p + 2];
-            maze.set(x, y, r > 0 || g > 0 || b > 0);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int p = (y * width + x) << 2;
+            maze.set(x, y, (pixels[p] + pixels[p + 1] + pixels[p + 2]) > 0);
         }
     }
     std::cout << "Transformed image into maze in " << delta_nanos(time) << "ns"
