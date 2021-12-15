@@ -10,8 +10,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB_RECURSE SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 add_executable(maze-bench ${SRC})
 
-# Workaround until lodepng is fixed
-target_include_directories(maze-bench PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/build/vcpkg_installed/x64-windows/include)
-
 find_package(lodepng CONFIG REQUIRED)
 target_link_libraries(maze-bench PRIVATE lodepng)
